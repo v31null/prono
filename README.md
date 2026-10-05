@@ -1,0 +1,1 @@
+If You know english , You are ‘ere‑by inviten to provide translations , should You wish to do so , for to be usen in Services for þe General populace Maß Tele-kommunikation services namen as prono Code‑namen „ prono „ — Kurrent .phps are þe Latest‑AVAIL‑ver.‑s of þe languages Kurrently supporten.
