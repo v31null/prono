@@ -196,7 +196,7 @@ $S = [
         'create_group' => 'Ípmùk íün̈ mírmíț',          // Create Group
         'add_to_group' => 'Mílksfas uù’mírmíț',           // Add to Group
         'likes' => 'Ríüakùns naíkríbas',                   // Likes
-        'new_message_scroll_klick' => '{n}‑ùns Síntùns naíkríbas', // {n} new message( s )
+        'new_message_scroll_klick' => '{n}‑ù/ns Síntù/ns naíkríb/as', // {n} new message( s )
         'liked_attachment' => 'Alagon̈ga @ {time}',             // Attachment @ {time}
         'no_likes' => 'Níe Ríüakem naíkríbas',             // No liked messages
         'group_settings' => 'Bímíțífas uùtí mírmíț',    // Group Settings
@@ -269,7 +269,7 @@ $S = [
         'saved' => 'Gùbaíbízngaín',                          // Saved
         'error_name_taken' => 'Íülíntù e kípaș',          // Name already taken
         'error_wrong_password' => 'Níh Íümílksa číkík',   // Wrong password
-        'error_file_too_large' => 'Alkarí Mílks‑íëstara ( mílksmílksa 500 KB )', // File too large (max 500 KB)
+        'error_file_too_large' => 'Alkarí Mílks‑íëstara ( mílksmílksa 500 KB )', // File too large (max 500 KB)
         'error_invalid_file' => 'Níh kírín̈ga Alkarù‑asífù', // Invalid file type
         'notifications' => 'Nočțùmafísmíțas',              // Notifications
         'global_mute' => 'Alùz enramíț',                      // Global Mute
@@ -399,7 +399,7 @@ $S = [
         'group_create' => '{actor} gípmùkín uq mírmíț',    // {actor} created the group
         'owner_change' => '{target} rík uk gbrínman',          // {target} is now the owner
         'friend' => '{actor} & {target} rík dùrínäs',        // {actor} and {target} are now friends
-        'like' => '{actor} gùríüakaín {n}‑ùns naíkríb( as ) , úír {x}‑ùns țita( as )', // {actor} liked {n} message( s ), {x} time( s ) in total
+        'like' => '{actor} gùríüakaín {n}‑ù( ns ) naíkríb( as ) , úír {x}‑ù( ns ) țita( as )', // {actor} liked {n} message( s ), {x} time( s ) in total
     ],
 
     'emoji' => [

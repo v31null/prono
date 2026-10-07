@@ -183,6 +183,7 @@ $S = [
         'delete' => 'Delete',
         'copy' => 'Copy',
         'copy_raw' => 'Copy raw',
+        'copied' => 'Copied',
         'morethan10items' => 'You can not embed more than 10 files !',
         'overlayupload' => 'Stop dragging to embed the file',
         'unknown' => 'Unknown',
@@ -191,6 +192,7 @@ $S = [
         'reply_media' => '{actor}’s sent {kind} at {time}',
         'reply_attachment' => '{actor}’s sent attachment at {time}',
         'reply_unavailable' => 'Original message unavailable',
+        'reply_far' => 'Too far up the chat. Click to go there.',
         'media_image' => 'image',
         'media_video' => 'video',
         'media_audio' => 'audio',
@@ -220,6 +222,7 @@ $S = [
     ],
 
     'profile' => [
+        'details' => 'Profile details',
         'pin_label' => 'PIN: {pin}',
         'message_button' => 'Message',
         'block_button' => 'Block',
@@ -308,6 +311,7 @@ $S = [
         'split_text_prompt' => 'Split long messages',
         'setting_apperance' => 'Show all settings on one page',
         'junicode_show_prompt' => 'Use the serif version of the website',
+        'maru_marks' => 'Use the maru versions',
         'off_set' => 'Time offset',
         'day_time_saving' => 'Daylight saving time',
         'session_management' => 'Session Management',
@@ -461,3 +465,174 @@ $S = [
         'access_denied' => 'Access denied',
     ],
 ];
+
+if (!function_exists('t')) {
+    function t(string $key, array $params = []): string
+    {
+        global $S;
+        $parts = explode('.', $key);
+        $value = $S;
+
+        foreach ($parts as $part) {
+            if (!isset($value[$part])) {
+                return $key;
+            }
+            $value = $value[$part];
+        }
+
+        if (!is_string($value)) {
+            return $key;
+        }
+
+        foreach ($params as $k => $v) {
+            $value = str_replace('{' . $k . '}', $v, $value);
+        }
+
+        return $value;
+    }
+}
+
+if (!function_exists('strings_flat')) {
+    function strings_flat(array $tree, string $prefix = ''): array
+    {
+        $out = [];
+        foreach ($tree as $k => $v) {
+            if (is_array($v)) $out += strings_flat($v, $prefix . $k . '.');
+            elseif (is_string($v)) $out[$prefix . $k] = $v;
+        }
+        return $out;
+    }
+}
+
+if (!function_exists('strings_for')) {
+    function strings_for(string $lang): array
+    {
+        $load = function () use ($lang) {
+            include __DIR__ . '/strings.php';
+            $base = $S;
+            if ($lang !== 'strings' && preg_match('/^[a-z]+$/', $lang) && is_file(__DIR__ . '/' . $lang . '.php')) {
+                include __DIR__ . '/' . $lang . '.php';
+                $base = is_array($S) ? array_replace_recursive($base, $S) : $base;
+            }
+            return $base;
+        };
+        $keep = $GLOBALS['S'] ?? null;
+        $tree = $load();
+        $GLOBALS['S'] = $keep;
+        return strings_flat($tree);
+    }
+}
+
+if (!function_exists('ts')) {
+    function ts(string $key, array $params = []): string
+    {
+        $args = $params ? " data-a='" . htmlspecialchars(json_encode($params, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') . "'" : '';
+        return '<t-s data-k="' . htmlspecialchars($key, ENT_QUOTES, 'UTF-8') . '"' . $args . '>' . htmlspecialchars(t($key, $params), ENT_QUOTES, 'UTF-8') . '</t-s>';
+    }
+}
+
+if (!function_exists('ta')) {
+    function ta(array $map): string
+    {
+        $pairs = [];
+        foreach ($map as $attr => $key) $pairs[] = $attr . ':' . $key;
+        return ' data-i18n-a="' . htmlspecialchars(implode(';', $pairs), ENT_QUOTES, 'UTF-8') . '"';
+    }
+}
+
+if (!function_exists('strings_script')) {
+    function strings_script(): string
+    {
+        global $S;
+        return '<script>window.PRONO_STRINGS = ' . json_encode(strings_flat($S), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) . ';</script>';
+    }
+}
+
+if (!function_exists('browser_lang_files')) {
+    function browser_lang_files(): array
+    {
+        $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
+        $map = [
+            'ru' => 'rus',
+            'fr' => 'fra',
+            'pl' => 'pol',
+            'tr' => 'tur',
+            'de' => 'deu',
+            'az' => 'aze',
+            'en' => 'strings',
+            'ja' => 'jp',
+            'ar' => 'ara',
+            'he' => 'kan',
+            'zh' => 'chi',
+            'hu' => 'mag',
+            'ro' => 'rom',
+            'es' => 'spa',
+        ];
+        $ranked = [];
+        foreach (explode(',', $accept) as $part) {
+            $part = trim($part);
+            if ($part === '') continue;
+            $q = 1.0;
+            $code = $part;
+            if (strpos($part, ';') !== false) {
+                [$code, $rest] = explode(';', $part, 2);
+                if (preg_match('/q=([0-9.]+)/', $rest, $m)) $q = (float)$m[1];
+            }
+            $primary = strtolower(substr(trim($code), 0, 2));
+            if ($primary !== '') $ranked[] = [$primary, $q];
+        }
+        usort($ranked, fn($a, $b) => $b[1] <=> $a[1]);
+        $files = [];
+        foreach ($ranked as $entry) {
+            $primary = $entry[0];
+            if (!isset($map[$primary])) continue;
+            $file = $map[$primary];
+            if (($file === 'strings' || is_file(__DIR__ . '/' . $file . '.php')) && !in_array($file, $files, true)) {
+                $files[] = $file;
+            }
+        }
+        return $files;
+    }
+}
+
+if (!function_exists('detect_browser_lang')) {
+    function detect_browser_lang(): string
+    {
+        return browser_lang_files()[0] ?? 'strings';
+    }
+}
+
+if (!function_exists('detect_mail_lang')) {
+    function detect_mail_lang(): string
+    {
+        foreach (browser_lang_files() as $file) {
+            if ($file !== 'strings') return $file;
+        }
+        return 'strings';
+    }
+}
+
+if (!function_exists('resolve_lang')) {
+    function resolve_lang(?string $lang): string
+    {
+        if (!$lang || $lang === 'auto') return detect_browser_lang();
+        return $lang;
+    }
+}
+
+if (!function_exists('apply_lang')) {
+    function apply_lang(string $lang): void
+    {
+        global $S;
+        if ($lang === 'strings' || !preg_match('/^[a-z]+$/', $lang)) return;
+        $file = __DIR__ . '/' . $lang . '.php';
+        if (!is_file($file)) return;
+        $base = $S;
+        include $file;
+        if (is_array($S)) {
+            $S = array_replace_recursive($base, $S);
+        } else {
+            $S = $base;
+        }
+    }
+}

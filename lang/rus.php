@@ -196,7 +196,7 @@ $S = [
         'create_group' => 'Создать группу',         // Create Group
         'add_to_group' => 'Добавить в группу',    // Add to Group
         'likes' => 'Оценки',                               // Likes
-        'new_message_scroll_klick' => '{n} нов( ое / ых ) сообщени( е / я / й )', // {n} new message( s )
+        'new_message_scroll_klick' => '{n} нов( ое / ых ) сообщени( е / я / й )', // {n} new message( s )
         'liked_attachment' => 'Вложение @ {time}', // Attachment @ {time}
         'no_likes' => 'Нет оценённых сообщений', // No liked messages
         'group_settings' => 'Настройки группы',   // Group Settings
@@ -399,7 +399,7 @@ $S = [
         'group_create' => '{actor} создал группу',   // {actor} created the group
         'owner_change' => 'Теперь {target} — владелец', // {target} is now the owner
         'friend' => '{actor} и {target} теперь друзья', // {actor} and {target} are now friends
-        'like' => '{actor} оценил(а) {n} сообщени( е / я / й ), всего {x} раз( а )', // {actor} liked {n} message( s ), {x} time( s ) in total
+        'like' => '{actor} оценил(а) {n} сообщени( е / я / й ), всего {x} раз( а )', // {actor} liked {n} message( s ), {x} time( s ) in total
     ],
 
     'emoji' => [
